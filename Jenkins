@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'us-east-1'
+        BUCKET_NAME = 'vin-static-site-86673444'       // 🔁 Replace with your actual bucket name
+        DISTRIBUTION_ID = 'ET340CYP2M0JL'         // 🔁 Replace with your CloudFront Distribution ID
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Vin22-03/Day16_static_site_CICD.git'
+            }
+        }
+
+        stage('Upload to S3') {
+            steps {
+                sh '''
+                echo "Uploading files to S3..."
+                aws s3 sync . s3://$BUCKET_NAME/ \
+                    --exclude "terraform/*" \
+                    --exclude "Jenkinsfile" \
+                    --delete
+                '''
+            }
+        }
+
+        stage('Invalidate CloudFront Cache') {
+            steps {
+                sh '''
+                echo "Invalidating CloudFront cache..."
+                aws cloudfront create-invalidation \
+                    --distribution-id $DISTRIBUTION_ID \
+                    --paths "/*"
+                '''
+            }
+        }
+    }
+}
