@@ -11,7 +11,7 @@ stages {
         stage('Upload to S3') {
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding',
-                    credentialsId: 'aws-creds',
+                    credentialsId: 'aws-ecr',
                     usernameVariable: 'AWS_ACCESS_KEY_ID',
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY']]) {
 
