@@ -11,7 +11,7 @@ pipeline {
 
         stage('📥 Checkout Code') {
             steps {
-                git credentialsId: 'github-creds', url: 'https://github.com/Vin22-03/Day16_static_site_CICD'
+                git credentialsId: 'github-creds', url: 'https://github.com/Vin22-03/Day16_static_site_CICD', branch: 'main'
             }
         }
 
